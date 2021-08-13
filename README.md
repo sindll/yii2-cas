@@ -49,6 +49,7 @@ return [
         'host' => '',
         'port' => '',
         'path' => '',
+        'log'  => '',
         'handle_logout_request' => [
             'check_client'    => false, // default
             'allowed_clients' => [], // default
