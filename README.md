@@ -17,9 +17,8 @@ or add
 Configuration
 -------------
 
-```php
 main.php
-
+```php
 return [
     //....
     'bootstrap' => [
@@ -40,9 +39,10 @@ return [
         ],
     ]
 ];
+```
 
 params.php
-
+```php
 return [
     //...
     'cas' => [
