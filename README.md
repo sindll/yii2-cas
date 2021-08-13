@@ -18,6 +18,8 @@ Configuration
 -------------
 
 ```php
+main.php
+
 return [
     //....
     'bootstrap' => [
@@ -35,6 +37,21 @@ return [
         'user' => [
             //...
             'loginUrl' => ['cas/passport/login'],
+        ],
+    ]
+];
+
+params.php
+
+return [
+    //...
+    'cas' => [
+        'host' => '',
+        'port' => '',
+        'path' => '',
+        'handle_logout_request' => [
+            'check_client'    => false, // default
+            'allowed_clients' => [], // default
         ],
     ]
 ];

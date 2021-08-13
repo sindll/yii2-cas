@@ -13,26 +13,22 @@ class Module extends \yii\base\Module
     {
         parent::init();
 
-        if (Yii::$app->session) {
-            session_name(Yii::$app->session->getName());
+        $session = Yii::$app->session;
+        if ($session) {
+            session_name($session->getName());
+            $session->open();
         }
 
         $cas = Yii::$app->params['cas'];
         $this->setup($cas);
 
-        if (Yii::$app->user->getIsGuest()) {
-            if (phpCAS::isAuthenticated()) {
-                $user = phpCAS::getUser();
+        if (phpCAS::isAuthenticated()) {
+            $user = phpCAS::getUser();
 
-                $class = Yii::$app->user->identityClass;
-                $identity = $class::findIdentity($user);
+            $class = Yii::$app->user->identityClass;
+            $identity = $class::findIdentity($user);
 
-                $duration = 0;
-                if (isset($cas['duration'])) {
-                    $duration = $cas['duration'];
-                }
-                Yii::$app->user->login($identity, $duration);
-            }
+            Yii::$app->user->setIdentity($identity);
         }
     }
 
@@ -45,9 +41,17 @@ class Module extends \yii\base\Module
             phpCAS::setLogger($logger);
         }
 
-        phpCAS::client(CAS_VERSION_2_0, $cas['host'], $cas['port'], $cas['uri']);
+        phpCAS::client($cas['host'], $cas['host'], $cas['port'], $cas['path']);
         phpCAS::setNoCasServerValidation();
 
-        phpCAS::handleLogoutRequests();
+        $handleLogoutRequest = [
+            'check_client'    => false,
+            'allowed_clients' => [],
+        ];
+        if (isset($cas['handle_logout_request'])) {
+            $handleLogoutRequest = array_merge($handleLogoutRequest, $cas['handle_logout_request']);
+        }
+
+        phpCAS::handleLogoutRequests($handleLogoutRequest['check_client'], $handleLogoutRequest['allowed_clients']);
     }
 }
