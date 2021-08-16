@@ -41,7 +41,7 @@ class Module extends \yii\base\Module
             phpCAS::setLogger($logger);
         }
 
-        phpCAS::client($cas['host'], $cas['host'], $cas['port'], $cas['path']);
+        phpCAS::client(CAS_VERSION_2_0, $cas['host'], $cas['port'], $cas['path']);
         phpCAS::setNoCasServerValidation();
 
         $handleLogoutRequest = [
